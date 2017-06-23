@@ -52,12 +52,13 @@ class MyAdvertising(object):
         print("sent message")
         
     def my_receive(self):    
-        data = self.client_socket.recv[1024]
-        print("received: ",data)
+        data = self.client_socket.recv(80)
+        print("received: {}".format(data))
 
     def my_disconnect(self):
         self.client_socket.close()
         self.server_socket.close()
+        print("disconnect.")
 
 if __name__ == '__main__':
     myname = "raspberrypi"
@@ -69,8 +70,8 @@ if __name__ == '__main__':
     s.get_serverinfo()
     s.my_advertising(myname,myuuid)
     s.my_accept()
-    #s.my_send("sent message from server.")
-    #s.my_receive()
+    s.my_send("sent message from server.")
+    s.my_receive()
     s.my_disconnect()
     
     

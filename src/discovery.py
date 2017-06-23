@@ -13,7 +13,7 @@ class MyDiscovery(object):
         self.addr = None
         self.channel = None
         self.protocol = None
-        self.clinet_socket = None
+        self.client_socket = None
         self.server_socket = None
         
     def my_discovery(self,_name):
@@ -51,7 +51,7 @@ class MyDiscovery(object):
         self.channel = first_match["port"]
         self.name = first_match["name"]
         self.addr = first_match["host"]
-        print("connect protocol:{},channel:{},name:{},addr:{}".format(self.protocol,self.channel,self.name,self.addr) )
+        print("try to connect: protocol:{},channel:{},name:{},addr:{}".format(self.protocol,self.channel,self.name,self.addr) )
        
         #for match in device_match:
         #    #print(match)
@@ -65,13 +65,22 @@ class MyDiscovery(object):
 
     def my_connect(self):
         print("connecting...")
+        sys.stdout.flush()
         self.client_socket = BluetoothSocket(RFCOMM)
         self.client_socket.connect((self.addr,self.channel))
+        print("Okay")
         
-    def my_disconnect(self):
-        print("disconnect.")
-        self.client_socket.close()   
+    def my_disconnect(self):        
+        self.client_socket.close() 
+        print("disconnect.")  
+  
+    def my_send(self,message):   
+        self.client_socket.send(message)
+        print("sent message.")
         
+    def my_receive(self):    
+        data = self.client_socket.recv(80)
+        print ("received:", data)    
 
 if __name__ == '__main__':
     myname = "raspberrypi"
@@ -82,8 +91,9 @@ if __name__ == '__main__':
     d = MyDiscovery()
     #d.my_discovery(myname)
     d.my_scan(_name=myname)
-    
     d.my_connect()
+    d.my_send("sending from client.")
+    d.my_receive()
     d.my_disconnect()
     
 
